@@ -20,6 +20,7 @@ import (
 	"context"
 	"fmt"
 	"math/rand"
+	"runtime/debug"
 	"sync"
 	"time"
 
@@ -188,6 +189,10 @@ func (ip *specificInformersMap) HasSyncedFuncs() []cache.InformerSynced {
 // Get will create a new Informer and add it to the map of specificInformersMap if none exists.  Returns
 // the Informer from the map.
 func (ip *specificInformersMap) Get(ctx context.Context, gvk schema.GroupVersionKind, obj runtime.Object) (bool, *MapEntry, error) {
+
+	fmt.Printf("Informers.Get is called with stack, gvk=%s\n", gvk.String())
+	debug.PrintStack()
+
 	// Return the informer if it is found
 	i, started, ok := func() (*MapEntry, bool, bool) {
 		ip.mu.RLock()
